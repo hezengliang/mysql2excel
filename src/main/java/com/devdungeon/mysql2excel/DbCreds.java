@@ -18,7 +18,9 @@ class DbCreds {
     String dbHost;
     String dbUser;
     String dbPass;
-    String dbTable;
+    String dbTables;
+    String dbCondition;
+
     String outFile;
 
     static DbCreds loadConfig(String configFileName) {
@@ -31,9 +33,12 @@ class DbCreds {
             creds.dbHost = props.getProperty("dbHost");
             creds.dbName = props.getProperty("dbName");
             creds.dbPass = props.getProperty("dbPass");
-            creds.dbTable = props.getProperty("dbTable");
             creds.dbUser = props.getProperty("dbUser");
             creds.outFile = props.getProperty("outFile");
+
+            creds.dbTables = props.getProperty("dbTables");
+            creds.dbCondition = props.getProperty("dbCondition");
+
             reader.close();
         } catch (FileNotFoundException ex) {
             Log.log("Configuration file not found. Expected to find mysql2excel.config file. Try mysql2excel --generate-config-template.");
@@ -50,7 +55,8 @@ class DbCreds {
         props.setProperty("dbName", "myDb");
         props.setProperty("dbUser", "linusTorvalds");
         props.setProperty("dbPass", "iHatePenguins");
-        props.setProperty("dbTable", "myTable");
+        props.setProperty("dbTables", "myTable1, myTable2, myTable3");
+        props.setProperty("dbCondition", "");
         props.setProperty("outFile", "output.xlsx");
         
         File outfile = new File(outfileName);

@@ -16,11 +16,12 @@ public class Main {
     /**
      * The program name used throughout the application to refer to itself.
      * Intended to match the name of the final script that launches the program
-     *
+     * <p>
      * e.g. a bash launcher script named mysql2excel ``` #!/usr/bin/bash java
      * -jar ~/bin/mysql2excel-1.0.0.jar "$@" ```
      */
     static final String PROGRAM_NAME = "mysql2excel";
+    static final String DEFAULT_CONFIG = "my.config";
 
     /**
      * Print command line usage options to provide user instructions.
@@ -35,6 +36,7 @@ public class Main {
                 + "\nExample:\n"
                 + "  " + PROGRAM_NAME + " -g sample.config\n"
                 + "  " + PROGRAM_NAME + " my.config\n"
+                + "  " + PROGRAM_NAME + " (default config: my.config)\n"
         );
     }
 
@@ -43,10 +45,18 @@ public class Main {
      * information and exits as needed.
      *
      * @param args
+     *
+     * @return configFilename
      */
-    static void processArgs(String[] args) {
+    static String processArgs(String[] args) {
+        // default usage
+        if (args.length == 0) {
+            Log.log("Use default config file: " + DEFAULT_CONFIG);
+            return DEFAULT_CONFIG;
+        }
+
         // -h | --help
-        if (args.length == 0 || "-h".equals(args[0]) || "--help".equals(args[0])) {
+        if ("-h".equals(args[0]) || "--help".equals(args[0])) {
             printUsage();
             System.exit(0);
         }
@@ -78,6 +88,8 @@ public class Main {
             System.exit(1);
         }
 
+        return args[0];
+
         // If end of function is reached, no special flags have been provided,
         // and rest of program should continue as normal
     }
@@ -89,13 +101,14 @@ public class Main {
      */
     public static void main(String[] args) {
         // Handle command line arguments
-        processArgs(args);
+        String configFilename = processArgs(args);
 
         // Load configuration file
-        DbCreds creds = DbCreds.loadConfig(args[0]);
+        DbCreds creds = DbCreds.loadConfig(configFilename);
         Log.log("Database Host: \t" + creds.dbHost);
         Log.log("Database Name: \t" + creds.dbName);
-        Log.log("Database Table: \t" + creds.dbTable);
+        Log.log("Database Tables: \t" + creds.dbTables);
+        Log.log("Database Condition: \t" + creds.dbCondition);
         Log.log("Database User: \t" + creds.dbUser);
         Log.log("Output File: \t" + creds.outFile);
 
@@ -110,7 +123,8 @@ public class Main {
                 creds.dbName,
                 creds.dbUser,
                 creds.dbPass,
-                creds.dbTable);
+                creds.dbTables,
+                creds.dbCondition);
 
         // Time elapsed
         LocalDateTime endTime = LocalDateTime.now();

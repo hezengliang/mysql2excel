@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 
 /**
  * Simple printing and logging wrappers
- * 
+ *
  * @author NanoDano <nanodano@devdungeon.com>
  */
 public class Log {
@@ -22,5 +22,5 @@ public class Log {
     static void log(Object message) {
         System.out.println(message.toString());
     }
-    
+
 }

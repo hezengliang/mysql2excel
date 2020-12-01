@@ -20,15 +20,15 @@ or clone the repo from https://github.com/DevDungeon/mysql2excel
 
 ### Print help information
 
-    java -jar mysql2excel-1.0.1.jar
+    java -jar mysql2excel-1.0.2.jar -h
 
 ### Generate a settings template file
 
-    java -jar mysql2excel-1.0.1.jar -g sample.config
+    java -jar mysql2excel-1.0.2.jar -g sample.config
 
 ### Dump from MySQL to Excel using settings in config file
 
-    java -jar mysql2excel-1.0.1.jar my.config
+    java -jar mysql2excel-1.0.2.jar my.config
 
 
 ## Project Page
@@ -39,9 +39,14 @@ or clone the repo from https://github.com/DevDungeon/mysql2excel
 ## Contact
 
 NanoDano <nanodano@devdungeon.com>
+He Zengliang <hezengliang@hotmail.com>
 
 
 ## Changelog
+* 2020-12-01 v1.0.2
+    * enhancement: changed tablename to array
+    * enhancement: added condition for all tables
+    * enhancement: add replacement with ~date~ and ~time~ for output file name and auto creating directory
 
 * 2018-03-25 v1.0.1
     * Bug fix: added convert zeroDateTimeBehavior to convertToNull, minor formatting tweaks
