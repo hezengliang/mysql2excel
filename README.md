@@ -33,14 +33,12 @@ or clone the repo from https://github.com/DevDungeon/mysql2excel
 
 ## Project Page
 
-* https://www.devdungeon.com/content/mysql2excel
-* https://www.github.com/DevDungeon/mysql2excel
+* https://www.github.com/hezengliang/mysql2excel
 
 ## Contact
 
-NanoDano <nanodano@devdungeon.com>
-He Zengliang <hezengliang@hotmail.com>
-
+NanoDano <nanodano@devdungeon.com>  
+He Zengliang <hezengliang@hotmail.com>  
 
 ## Changelog
 * 2020-12-01 v1.0.2
