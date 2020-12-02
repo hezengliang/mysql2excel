@@ -20,15 +20,15 @@ or clone the repo from https://github.com/DevDungeon/mysql2excel
 
 ### Print help information
 
-    java -jar mysql2excel-1.0.2.jar -h
+    java -jar mysql2excel-1.0.3.jar -h
 
 ### Generate a settings template file
 
-    java -jar mysql2excel-1.0.2.jar -g sample.config
+    java -jar mysql2excel-1.0.3.jar -g sample.config
 
 ### Dump from MySQL to Excel using settings in config file
 
-    java -jar mysql2excel-1.0.2.jar my.config
+    java -jar mysql2excel-1.0.3.jar my.config
 
 
 ## Project Page
@@ -41,6 +41,9 @@ NanoDano <nanodano@devdungeon.com>
 He Zengliang <hezengliang@hotmail.com>  
 
 ## Changelog
+* 2020-12-02 v1.0.3
+    * enhancement: added offset of ~date~ and ~time~. e.g. ~date+1~ / ~time-1~
+    
 * 2020-12-01 v1.0.2
     * enhancement: changed tablename to array
     * enhancement: added condition for all tables

@@ -10,7 +10,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -23,6 +26,42 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * @author NanoDano <nanodano@devdungeon.com>
  */
 public class MysqlDumper {
+
+
+    /**
+     * Processing date and time delta
+     * @param outputFileName
+     * @return replaced outputFileName string
+     */
+    static String fileNameProcess(String outputFileName) {
+        SimpleDateFormat dateSdf = new SimpleDateFormat("yyyyMMdd");
+        SimpleDateFormat timeSdf = new SimpleDateFormat("HHmmss");
+        String datePattern = "~date([+-]?\\d+)~";
+        String timePattern = "~time([+-]?\\d+)~";
+        Pattern datePat = Pattern.compile(datePattern);
+        Pattern timePat = Pattern.compile(timePattern);
+        Matcher dateMatcher = datePat.matcher(outputFileName);
+        Matcher timeMatcher = timePat.matcher(outputFileName);
+        int dateDelta = 0;
+        int timeDelta = 0;
+        if (dateMatcher.find()) {
+            dateDelta = Integer.parseInt(dateMatcher.group(1));
+        }
+        if (timeMatcher.find()) {
+            timeDelta = Integer.parseInt(timeMatcher.group(1));
+        }
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DAY_OF_MONTH, dateDelta);
+        cal.add(Calendar.HOUR, timeDelta);
+
+        String dateStr = dateSdf.format(cal.getTime());
+        String timeStr = timeSdf.format(cal.getTime());
+
+        String result = outputFileName.replaceAll(datePattern, dateStr).replaceAll(timePattern, timeStr);
+        return result;
+    }
 
     /**
      * Given database credentials and table name, this function connects to the
@@ -81,7 +120,7 @@ public class MysqlDumper {
 
                 stmt = conn.createStatement();
                 String querySql = "SELECT * FROM " + tableName;
-                if(tableCondition.trim().length() > 0) {
+                if (tableCondition.trim().length() > 0) {
                     querySql += " where " + tableCondition;
                 }
                 results = stmt.executeQuery(querySql);
@@ -106,20 +145,15 @@ public class MysqlDumper {
         // Save spreadsheet
         FileOutputStream os;
         try {
-            SimpleDateFormat dateSdf = new SimpleDateFormat("yyyyMMdd");
-            SimpleDateFormat timeSdf = new SimpleDateFormat("HHmmss");
-            String dateStr = dateSdf.format(new Date());
-            String timeStr = timeSdf.format(new Date());
-            outputFileName = outputFileName.replaceAll("~date~", dateStr);
-            outputFileName = outputFileName.replaceAll("~time~", timeStr);
+            outputFileName = fileNameProcess(outputFileName);
             int lastSep = outputFileName.lastIndexOf(File.separator);
 
             String outputDir = null;
-            if(lastSep > 0 )
-            {
+            if (lastSep > 0) {
                 outputDir = outputFileName.substring(0, lastSep);
                 File outputDirs = new File(outputDir);
                 outputDirs.mkdirs();
+                Log.log("Create directory: " + outputDir);
             }
 
             os = new FileOutputStream(outputFileName);
