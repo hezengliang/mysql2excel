@@ -41,6 +41,9 @@ NanoDano <nanodano@devdungeon.com>
 He Zengliang <hezengliang@hotmail.com>  
 
 ## Changelog
+* 2020-12-02 v1.0.4
+  * bugfix: avoid out of memeory error  
+
 * 2020-12-02 v1.0.3
     * enhancement: added offset of ~date~ and ~time~. e.g. ~date+1~ / ~time-1~
     

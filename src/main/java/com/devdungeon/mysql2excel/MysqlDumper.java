@@ -17,6 +17,8 @@ import java.util.regex.Pattern;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -78,7 +80,7 @@ public class MysqlDumper {
      */
     static void dumpMysqlToExcelFile(String outputFileName, String dbHost, String dbName, String dbUser, String dbPass, String tableNames, String tableCondition) {
         // Create spreadsheet
-        XSSFWorkbook workbook = new XSSFWorkbook();
+        SXSSFWorkbook workbook = new SXSSFWorkbook();
         // Connect to database
         Connection conn = null;
         Statement stmt = null;
@@ -103,7 +105,7 @@ public class MysqlDumper {
                 int cellNum = 0;
                 ResultSet results = stmt.executeQuery("DESCRIBE " + tableName);
                 ArrayList<String> columnNames = new ArrayList();
-                XSSFSheet mySheet = workbook.createSheet(tableName);
+                SXSSFSheet mySheet = workbook.createSheet(tableName);
                 Row row = mySheet.createRow(0); // Header row
                 while (results.next()) {
                     // Each column name in the table
@@ -115,7 +117,7 @@ public class MysqlDumper {
                 Log.log(columnNames);
 
                 // Get list of all data and dump
-                Log.log("Dumping data...");
+                Log.log(tableName + " Dumping data...");
                 int rowNum = 1;
 
                 stmt = conn.createStatement();
@@ -130,7 +132,11 @@ public class MysqlDumper {
                     int cellnum = 0;
                     for (String colName : columnNames) {
                         Cell cell = row.createCell(cellnum++);
-                        cell.setCellValue(results.getString(colName));
+                        String cellValue = results.getString(colName);
+                        if(cellValue != null)
+                            if(cellValue.length() >= 32767) // Excel text cell length limit
+                                cellValue = cellValue.substring(0, 32766);
+                        cell.setCellValue(cellValue);
                     }
                 }
             }
